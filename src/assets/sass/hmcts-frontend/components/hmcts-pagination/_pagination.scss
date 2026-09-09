@@ -113,7 +113,7 @@
   }
 
   &:hover {
-    color: govuk-colour("light-blue");
+    color: $govuk-link-hover-colour;
    }
 
   &:focus {

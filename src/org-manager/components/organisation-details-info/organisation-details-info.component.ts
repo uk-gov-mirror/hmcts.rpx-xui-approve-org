@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { LovRefDataModel } from '../../../shared/models/lovRefData.model';
 import { OrganisationVM, Regulator } from '../../models/organisation';
 import { RegulatorType, RegulatoryType } from '../../models/regulator-type.enum';
@@ -37,7 +38,7 @@ export class OrganisationDetailsInfoComponent implements OnChanges, OnInit {
   private readonly radioSelectedControlName = 'radioSelected';
   public readonly registrationRequest: DisplayedRequest[];
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder, private readonly titleService: Title) {
     this.registrationRequest = [
       { request: RequestType.APPROVE_REQUEST, checked: false },
       { request: RequestType.REJECT_REQUEST, checked: false },
@@ -99,10 +100,11 @@ export class OrganisationDetailsInfoComponent implements OnChanges, OnInit {
       this.errorMessage = {
         title: this.genericError,
         description: RequestErrors.NO_SELECTION,
-        fieldId: 'options'
+        fieldId: 'reason-0'
       };
     }
     if (this.formGroup.invalid) {
+      this.setErrorTitle();
       return;
     }
     const radioSelectedValue = this.formGroup.get(
@@ -136,6 +138,17 @@ export class OrganisationDetailsInfoComponent implements OnChanges, OnInit {
 
   public onChange(): void {
     this.submitted = false;
+    this.clearErrorTitle();
+  }
+
+  private setErrorTitle(): void {
+    if (!this.titleService.getTitle().startsWith('Error:')) {
+      this.titleService.setTitle(`Error: ${this.titleService.getTitle()}`);
+    }
+  }
+
+  private clearErrorTitle(): void {
+    this.titleService.setTitle(this.titleService.getTitle().replace(/^Error:\s*/, ''));
   }
 
   /**
