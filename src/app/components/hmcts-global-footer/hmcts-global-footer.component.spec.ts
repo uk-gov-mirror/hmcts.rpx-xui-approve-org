@@ -43,4 +43,21 @@ describe('HmctsGlobalFooterComponent', () => {
     expect(crown).not.toBeNull();
     expect(crown.getAttribute('role')).toBe('presentation');
   });
+
+  it('should display the Open Government Licence statement', () => {
+    const licenceLogo = fixture.nativeElement.querySelector('.govuk-footer__licence-logo');
+    const licenceDescription = fixture.nativeElement.querySelector('.govuk-footer__licence-description');
+    const licenceLink = licenceDescription.querySelector('a');
+    const licenceText = licenceDescription.textContent.replace(/\s+/g, ' ').trim();
+
+    expect(licenceLogo).not.toBeNull();
+    expect(licenceLogo.getAttribute('aria-hidden')).toBe('true');
+    expect(licenceText).toBe(
+      'All content is available under the Open Government Licence v3.0, except where otherwise stated'
+    );
+    expect(licenceLink.getAttribute('href')).toBe(
+      'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
+    );
+    expect(licenceLink.getAttribute('rel')).toBe('license');
+  });
 });
